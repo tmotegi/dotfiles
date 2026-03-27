@@ -12,9 +12,73 @@
 
 shell = "zsh"
 
+[templates]
+defer = """
+{{ hooks?.pre | nl }}
+{% for file in files %}
+zsh-defer source "{{ file }}"
+{% endfor %}
+{{ hooks?.post | nl }}
+"""
+
+fzf-install = """
+{{ hooks?.pre | nl }}
+{{ dir }}/install --bin > /dev/null
+path=($path {{ dir }}/bin(N-/))
+{{ hooks?.post | nl }}
+"""
+
+fzf-source = "source <(fzf --zsh)"
+
 [plugins]
 
-# For example:
 #
-# [plugins.base16]
-# github = "chriskempson/base16-shell"
+# Deferred Loading Plugins
+#
+[plugins.zsh-defer]
+github = "romkatv/zsh-defer"
+apply = ["source"]
+
+[plugins.compinit]
+inline = 'autoload -Uz compinit && zsh-defer compinit'
+
+[plugins.fzf]
+github = "junegunn/fzf"
+apply = ['fzf-install']
+hooks.post = '''
+export FZF_DEFAULT_OPTS="--reverse"
+'''
+
+#
+# Autoloading Plugins
+#
+[plugins.zsh-autosuggestions]
+github = 'zsh-users/zsh-autosuggestions'
+apply = ['defer']
+
+[plugins.zsh-completions]
+github = 'zsh-users/zsh-completions'
+apply = ['defer']
+
+[plugins.zsh-syntax-highlighting]
+github = 'zsh-users/zsh-syntax-highlighting'
+apply = ['defer']
+
+[plugins.zsh-autopair]
+github = 'hlissner/zsh-autopair'
+apply = ['defer']
+
+[plugins.zsh-history-on-success]
+github = 'nyoungstudios/zsh-history-on-success'
+
+[plugins.zsh-history-shell-options]
+inline = '''
+setopt INC_APPEND_HISTORY_TIME
+setopt INC_APPEND_HISTORY
+'''
+
+#
+# Mise
+#
+[plugins.mise]
+inline = 'eval "$(mise activate zsh)"'
