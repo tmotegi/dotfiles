@@ -2,6 +2,7 @@
 brew "chezmoi"
 brew "git"
 brew "mise"
+brew "sheldon"
 
 # Applications
 cask "cmux"
