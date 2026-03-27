@@ -4,6 +4,7 @@ brew "git"
 brew "mise"
 
 # Applications
+cask "cmux"
 cask "ghostty"
 cask "google-chrome"
 cask "google-japanese-ime"
